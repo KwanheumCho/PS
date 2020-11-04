@@ -29,7 +29,7 @@ int main(void){
     arr[1] = 1;
     func(1);
     for(int i=2; i<=N; i++){
-        cout << arr[i] << endl;
+        cout << arr[i] << '\n';
     }
 
     return 0;
