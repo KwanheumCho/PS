@@ -1,61 +1,53 @@
 #include <iostream>
+#include <queue>
 #include <vector>
+#include <utility>
 using namespace std;
-
-int dp[1001][1001] = {0,};
-vector<int> graph[1001];
-
-int find_way(int from, int to){
-    if(dp[from][to] ==0){ //가는 길이 없다
-        int min = 10000000;
-        for(int i=0; i<graph[to].size();i++){
-           int before_to = graph[to][i];
-           int value = find_way(from, before_to) + dp[before_to][to];
-           //cout <<"here: "<< from<<" "<<before_to<<" "<<find_way(from,before_to)<<endl;
-           if(min > value){
-               min = value;
-           }
+#define INF 1000000000
+int N, M, X;
+vector< pair<int, int> > connect [1001];
+int dist[1001];
+void func_dij( int from ){
+    dist[from] = 0; //시작점이라서 0
+    priority_queue< pair<int,int> , vector< pair<int, int> >, greater< pair<int, int> > > q;
+    q.push( make_pair(0, from)); // pair(거리 , 인덱스)
+    
+    while(!q.empty()){
+        int from_x = q.top().second;
+        int dist_x = q.top().first;//q에선 first는 거리
+        q.pop();
+        for( int i=0; i<connect[from_x].size(); i++){
+            int index = connect[from_x][i].first; // connect에선 first가 index
+            int distance = connect[from_x][i].second;
+            if(dist[index] > distance + dist[from_x]){
+                dist[index] = distance + dist[from_x];
+                q.push( make_pair(dist[index], index));
+            } // dist[index]의 초기값 inf.   
         }
-        return min;
-    }
-    else{ // 가는길이 있다면, 바로가는길과 돌아가는길 비교해야한다.
-        int min = 10000000;
-        for(int i=0; i<graph[to].size();i++){
-            
-            int before_to = graph[to][i];
-            cout << "min: "<<min <<" "<<graph[to].size()<<" "<<before_to << " "<< i<< endl;
-            if(before_to!= from){
-            int value = find_way(from, before_to) + dp[before_to][to];
-            //cout <<"here: "<< from<<" "<<before_to<<" "<<find_way(from,before_to)<<endl;
-            if(min > value){
-                min = value;
-                }
-            }
-            
-        }
-        if(min > dp[from][to]) return dp[from][to];
-        else return min;
     }
 }
 
+
 int main(void){
-    int N, M, X;
     cin >> N >> M >> X;
     for(int i=0; i<M; i++){
         int a, b, c;
-        cin >> a >> b>> c;
-        dp[a][b] = c;
-        graph[b].push_back(a); // b로 가기위한 전단계가 a 이다 라는 뜻
-
+        cin >> a>> b>> c;
+        connect[a].push_back(make_pair(b,c)); // b: 목적지 c:distance
     }
-    int max = 0;
-    /*
+    int* arr = new int[N+1];
     for(int i=1; i<=N; i++){
-        int person = find_way(i, X) + find_way(X, i);
-        cout << person << endl;
+        for(int j=1; j<=N; j++) dist[j] =INF;
+        func_dij(i);
+        arr[i] = dist[X]; // i to X의 최소값.
     }
-    */
-    cout << find_way(2,3) << endl;
-    // n번 학생이 x번 마을로 가는데 걸리는 시간 + 오는데 걸리는 시간
+    for(int i=1; i<=N; i++) dist[i] =INF;
+    func_dij(X); // X to ~의 최소값. dist에 저장
+    int answer = 0;
+    for(int i=1; i<=N; i++){
+        if(answer < arr[i] + dist[i]) answer = arr[i] + dist[i];
+    }
+    cout << answer <<endl;
 
+    return 0;
 }

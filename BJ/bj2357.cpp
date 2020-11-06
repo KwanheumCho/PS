@@ -12,12 +12,12 @@ struct Node{
 
 Node seg_tree[100000*4];
 int arr[100000+1];
-int node_number = 0;
+//int node_number = 0;
 Node Make_tree(int node, int start, int end){
     if(start==end){
         seg_tree[node].minv = arr[start];
         seg_tree[node].maxv = arr[start];
-        if(node > node_number) node_number = node;
+        //if(node > node_number) node_number = node;
         return seg_tree[node];
     }
 
@@ -72,6 +72,6 @@ int main(void){
         answer.push_back(result);
     }
     for(int i=0; i<answer.size(); i++){
-        cout << answer[i].minv << " " << answer[i].maxv << endl;
+        cout << answer[i].minv << " " << answer[i].maxv << '\n';
     }
 }
