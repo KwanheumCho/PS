@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#define MAX_NODE 100001
+#define MAX_NODE 100002
 using namespace std;
 int V;
 vector< pair<int, int> > tree[MAX_NODE];
@@ -36,20 +36,17 @@ int main(void){
             if(next_node == -1) break;
             else{
                 cin >> dist;
-                tree[i+1].push_back( make_pair(next_node, dist) );
+                tree[node_number].push_back( make_pair(next_node, dist) );
             }
         }
     }
     int answer = 0;
     
     func_(1, 0);
-    tmp_result = 0;
-    //cout <<";"<< tmp_node << endl;
+    tmp_result = 0; 
     for(int k=1; k<=V; k++) chk_[k] = false;
     func_(tmp_node, 0);
-    answer = max(answer, tmp_result);
-        
-    
-    cout << answer << endl;
+    cout << tmp_result << endl;
+       
     
 }
