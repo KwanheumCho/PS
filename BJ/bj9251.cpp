@@ -40,24 +40,6 @@ int main(void){
         }
     }
     
-    string output = "";
-    while(true){
-        cout << "row: "<<row <<" col: "<<col << endl; 
-        if(row==0 || col==0) break;
-        if(dp_[row][col] > dp_[row-1][col-1] && dp_[row][col]>dp_[row-1][col] && dp_[row][col]> dp_[row][col-1]){
-            output = A[row-1] + output;
-            row--;
-            col--;
-        }
-        else if(dp_[row][col] > dp_[row-1][col] && dp_[row][col] == dp_[row][col-1]){
-            col--;
-        }
-        else if(dp_[row][col] == dp_[row-1][col]){
-            row--;
-        }
-    }
-    cout << output << endl;
-    
     cout << ans << endl;
    
 return 0;
