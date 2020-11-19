@@ -1,40 +1,64 @@
 #include <iostream>
 #include <string>
-#include <cmath>
+#include <algorithm>
 using namespace std;
+int dp_[1001][1001];
 
-int main(){
+int main(void){
     string A, B;
     cin >> A >> B;
-    int a_size = A.size();
-    int b_size = B.size();
-    int** arr = new int*[a_size+1];
-    string** s = new string*[a_size+1];
-    for(int i=0; i<a_size+1;i++){
-        arr[i] = new int[b_size+1];
-        s[i] = new string[b_size+1];
-        for(int j=0; j<b_size+1; j++){
-            arr[i][j] = 0;
-            s[i][j] ="";
+    
+    if(A[0]==B[0]) dp_[1][1] = 1;
+
+    for(int i=1; i<B.size(); i++){
+        if(A[0] == B[i]){
+            dp_[1][i+1] = max(dp_[1][i], 1);
         }
+        else dp_[1][i+1] = dp_[1][i];
+    }
+    for(int i=1; i<A.size(); i++){
+        if(B[0] == A[i]){
+            dp_[i+1][1] = max(dp_[i][1], 1);
+        }
+        else dp_[i+1][1] = dp_[i][1];
     }
     int ans = 0;
-    int tmp;
-    for(int i=1; i<=a_size; i++){
-        for(int j=1; j<=b_size; j++){
-            
-                if(A[i]==B[j]) arr[i][j] = arr[i-1][j-1] +1;
-                else{
-                    if(arr[i][j-1] > arr[i-1][j]) arr[i][j] = arr[i][j-1];
-                    else arr[i][j] = arr[i-1][j];
+    int row, col;
+    for(int j=1; j<A.size(); j++){
+        for(int k=1; k<B.size(); k++){
+            if(A[j] == B[k]){
+                dp_[j+1][k+1] = dp_[j][k] +1;
+            }
+            else{
+                dp_[j+1][k+1] = max(dp_[j][k+1], dp_[j+1][k]);
+            }
+            if(ans < dp_[j+1][k+1]) {
+                ans = dp_[j+1][k+1];
+                row = j+1;
+                col = k+1;
                 }
-            
-            tmp = arr[i][j];
-            //cout << tmp <<" "<< i<<" " << j << endl;
-            if( tmp > ans) ans = tmp;
         }
     }
+    
+    string output = "";
+    while(true){
+        cout << "row: "<<row <<" col: "<<col << endl; 
+        if(row==0 || col==0) break;
+        if(dp_[row][col] > dp_[row-1][col-1] && dp_[row][col]>dp_[row-1][col] && dp_[row][col]> dp_[row][col-1]){
+            output = A[row-1] + output;
+            row--;
+            col--;
+        }
+        else if(dp_[row][col] > dp_[row-1][col] && dp_[row][col] == dp_[row][col-1]){
+            col--;
+        }
+        else if(dp_[row][col] == dp_[row-1][col]){
+            row--;
+        }
+    }
+    cout << output << endl;
+    
     cout << ans << endl;
-
-    return 0;
+   
+return 0;
 }
