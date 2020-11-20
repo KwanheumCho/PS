@@ -2,45 +2,36 @@
 #include <string>
 #include <algorithm>
 using namespace std;
-int dp_[1001][1001];
+int dp[1001][1001];
+
+pair< pair<int, int>, int > func_(string A, string B){
+    
+    int max_val = 0;
+    int row=0, col=0;
+    for(int i=0; i<A.size(); i++){
+        for(int j=0; j<B.size(); j++){
+            if(A[i]==B[j]) dp[i+1][j+1] = dp[i][j]+1;
+            else{
+                dp[i+1][j+1] = max(dp[i][j+1] , dp[i+1][j]);
+            }
+            if(max_val < dp[i+1][j+1]){
+                max_val = dp[i+1][j+1];
+                row = i+1;
+                col = j+1;
+            }
+        }
+    }
+    return make_pair( make_pair(row, col), max_val);
+}
 
 int main(void){
     string A, B;
     cin >> A >> B;
     
-    if(A[0]==B[0]) dp_[1][1] = 1;
-
-    for(int i=1; i<B.size(); i++){
-        if(A[0] == B[i]){
-            dp_[1][i+1] = max(dp_[1][i], 1);
-        }
-        else dp_[1][i+1] = dp_[1][i];
-    }
-    for(int i=1; i<A.size(); i++){
-        if(B[0] == A[i]){
-            dp_[i+1][1] = max(dp_[i][1], 1);
-        }
-        else dp_[i+1][1] = dp_[i][1];
-    }
-    int ans = 0;
-    int row, col;
-    for(int j=1; j<A.size(); j++){
-        for(int k=1; k<B.size(); k++){
-            if(A[j] == B[k]){
-                dp_[j+1][k+1] = dp_[j][k] +1;
-            }
-            else{
-                dp_[j+1][k+1] = max(dp_[j][k+1], dp_[j+1][k]);
-            }
-            if(ans < dp_[j+1][k+1]) {
-                ans = dp_[j+1][k+1];
-                row = j+1;
-                col = k+1;
-                }
-        }
-    }
+    pair< pair<int,int> , int> X;
+    X = func_(A, B);
     
-    cout << ans << endl;
+    cout << X.second << endl;
    
 return 0;
 }
