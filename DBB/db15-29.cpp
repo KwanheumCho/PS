@@ -20,8 +20,6 @@ int main(void){
     int answer;
     while(start <= end){
         int mid = (start+end)/2;
-        //cout << mid << endl;
-        //bool flag = false;
         int base = v[0];
         int cnt = 1;
         for(int i=1; i<N; i++){
@@ -30,11 +28,9 @@ int main(void){
                 base = v[i];
             }
         }
-        //cout << "cnt: "<<cnt << endl;
         if(cnt >= C){ // 현재 mid 값으로 가능!
             start = mid+1;
             answer = mid;
-            //cout <<"here: "<< answer << endl;
         }
         else{
             end = mid-1;
