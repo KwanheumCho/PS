@@ -18,8 +18,7 @@ int main(void){
         int lower = arr[i];
         for(int j=i-1; j>=1; j--){
             if(arr[j] > lower){
-                dp[i] = dp[j] + 1;
-                break;
+                dp[i] = max(dp[i], dp[j]+1);
             }
         }
     }
