@@ -1,49 +1,53 @@
 #include <iostream>
-#include <vector>
 #include <string>
+#include <vector>
 #include <algorithm>
 using namespace std;
-vector<string> input;
-vector<string> tmp;
-int L;
-int C;
-void make_answer(string a, int cnt, int m, int j){
-    //cout << a << cnt <<" "<< m<<" " << j <<endl;
-    
-    if(m+j==L){
-        if(m>=1 && j>=2){
-            tmp.push_back(a);
-            //cout << a << endl;
-            return;
-        }
-        else return;
-    }
-    if(cnt >= C){
-        return;
-    }
-    
+vector<char> v;
+vector<string> answer;
+int l , c;
 
-    for(int i=cnt; i<input.size(); i++){
-        string w = input[i];
-        if(w=="a" || w=="e" || w=="i"|| w=="o"||w=="u") make_answer(a+w, i+1, m+1, j );
-        else make_answer(a+w, i+1, m, j+1 );
+bool mo_chk(char x){
+    if(x=='a' || x=='i'||x=='o'||x=='e'||x=='u'){
+        return true;
     }
+    else return false;
 }
 
-int main(void){
-    cin >> L >> C; // L, C >=3
-    for(int i=0; i<C; i++){
-        string tmp;
-        cin >> tmp;
-        input.push_back(tmp);
+void func_(int start, int mo, int za, vector<char> tmp){
+    if(mo>=1 && za>=2 && mo+za==l){
+        sort(tmp.begin(), tmp.end());
+        string s = "";
+        for(int i=0; i<tmp.size(); i++){
+            s += tmp[i];
+        }
+        answer.push_back(s);
+        return;
     }
-    sort(input.begin(), input.end());
-    //최소 한개의 모음과 두개의 자음이 있어야해
-    //서로다른 L개의 알파벳으로 구성
-    make_answer("", 0, 0, 0);
-    sort(tmp.begin(), tmp.end());
-    
-    for(int k=0; k<tmp.size(); k++){
-        cout << tmp[k] << endl;
+    for(int i=start; i<v.size(); i++){
+        tmp.push_back(v[i]);
+        if(mo_chk(v[i])) func_( i+1, mo+1, za, tmp);
+        else func_(i+1, mo, za+1, tmp);
+        tmp.pop_back();
+    }
+    return;
+}
+int main(void){
+
+    cin >> l >> c;
+    //서로다른 l개의 알파벳 소문자로 구성.
+    //c개의 알파벳이 주어짐
+    //최소 한개의 모음과 최소 두개의 자음
+    //모음 : a e i o u
+    for(int i=0; i<c; i++){
+        char x;
+        cin >> x;
+        v.push_back(x);
+    }
+    vector<char> tmp;
+    func_(0 , 0, 0, tmp);
+    sort(answer.begin(), answer.end());
+    for(int i=0; i<answer.size(); i++){
+        cout << answer[i] << '\n';
     }
 }
